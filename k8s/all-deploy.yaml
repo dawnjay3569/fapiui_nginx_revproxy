@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reverse-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reverse-proxy
+  template:
+    metadata:
+      labels:
+        app: reverse-proxy
+    spec:
+      containers:
+      - name: nginx
+        image: <your-registry>/my-nginx-proxy:latest
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reverse-proxy-svc
+spec:
+  type: NodePort
+  selector:
+    app: reverse-proxy
+  ports:
+  - port: 5000
+    targetPort: 5000
+    nodePort: 32134   
